@@ -27,7 +27,7 @@ class ProductController extends Controller
             'name'  => ['required',  'string', 'max:100'],
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],
-        ],[
+        ], [
                 "name.required"  => "name is invalid",
                 "name.max"       => "name is limits",
                 "stock.required" => "stock is invalid",
@@ -61,7 +61,8 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $validate = $request->validate([
+        $validate = $request->validate(
+        [
             'name'  => ['required',  'string', 'max:100'],
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],

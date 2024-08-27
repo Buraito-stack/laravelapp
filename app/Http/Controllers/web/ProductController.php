@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\web;
+namespace App\Http\Controllers\api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 
 class ProductController extends Controller
 {
@@ -13,17 +13,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all(); 
-    
-        return view('products.index', ['products' => $products]);
-    }
+        $product = Product::all();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('products.create');
+        return response()->json(['products' => $product]);
     }
 
     /**
@@ -31,26 +23,29 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name'  => ['required', 'string', 'max:30'],
-            'stock' => ['required', 'numeric', 'min:0'],
+        $validate = $request->validate(
+        [
+            'name'  => ['required',  'string', 'max:100'],
             'price' => ['required', 'numeric', 'min:0'],
-        ],[
-            'name.required'  => 'Nama harus diisi.',
-            'stock.required' => 'Stok harus diisi.',
-            'price.required' => 'Harga harus diisi.',
-            'name.string'    => 'Nama harus berupa teks.',
-            'stock.numeric'  => 'Stok harus berupa angka.',
-            'price.numeric'  => 'Harga harus berupa angka.',
-            'name.max'       => 'Nama tidak boleh melebihi 30 karakter.',
-            'stock.min'      => 'Stok tidak boleh kurang dari 0.',
-            'price.min'      => 'Harga tidak boleh kurang dari 0.',
-        ]);  
+            'stock' => ['required', 'integer', 'min:0'],
+        ], 
+            [
+                "name.required"  => "name is invalid",
+                "name.max"       => "name is limits",
+                "stock.required" => "stock is invalid",
+                "stock.integer"  => "stock wasn't number",
+                "stock.min"      => "stock must be more than 0",
+                "price.required" => "price is invalid",
+                "price.integer"  => "price wasn't number",
+                "price.min"      => "price must be more than 0",
+            ]
+        );
 
-        $product = new Product($validated);
+        $product = new Product($validate);
+
         $product->save();
 
-        return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan.');
+        return response()->json(['product' => $product]);
     }
 
     /**
@@ -60,17 +55,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        return view('products.show', ['product' => $product]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        $product = Product::findOrFail($id);
-
-        return view('products.edit', ['product' => $product]);
+        return response()->json(['product' => $product]);
     }
 
     /**
@@ -78,26 +63,29 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $validated = $request->validate([
-            'name'  => ['required', 'string', 'max:30'],
-            'stock' => ['required', 'numeric', 'min:0'],
+        $validate = $request->validate(
+        [
+            'name'  => ['required',  'string', 'max:100'],
             'price' => ['required', 'numeric', 'min:0'],
-        ],[
-            'name.required'  => 'Nama harus diisi.',
-            'stock.required' => 'Stok harus diisi.',
-            'price.required' => 'Harga harus diisi.',
-            'name.string'    => 'Nama harus berupa teks.',
-            'stock.numeric'  => 'Stok harus berupa angka.',
-            'price.numeric'  => 'Harga harus berupa angka.',
-            'name.max'       => 'Nama tidak boleh melebihi 30 karakter.',
-            'stock.min'      => 'Stok tidak boleh kurang dari 0.',
-            'price.min'      => 'Harga tidak boleh kurang dari 0.',
-        ]);        
+            'stock' => ['required', 'integer', 'min:0'],
+        ], 
+            [
+                "name.required"  => "name is invalid",
+                "name.max"       => "name is limits",
+                "stock.required" => "stock is invalid",
+                "stock.integer"  => "stock wasn't number",
+                "stock.min"      => "stock must be more than 0",
+                "price.required" => "price is invalid",
+                "price.integer"  => "price wasn't number",
+                "price.min"      => "price must be more than 0",
+            ]
+        );
 
         $product = Product::findOrFail($id);
-        $product->update($validated);
 
-        return redirect()->route('products.index')->with('success', 'Produk berhasil diperbarui.');
+        $product->update($validate);
+
+        return response()->json(['product' => $product]);
     }
 
     /**
@@ -106,8 +94,9 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         $product = Product::findOrFail($id);
+
         $product->delete();
 
-        return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus.');
+        return response()->json(['product' => $product]);
     }
 }
