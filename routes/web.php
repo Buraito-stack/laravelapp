@@ -2,15 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\web\ProductController;
+use App\Http\Controllers\HomeController;
 
-// Grup rute dengan prefix 'products'
-Route::prefix('products')->group(function () {
-    Route::get('/', [ProductController::class, 'index'])->name('products.index');
-    Route::get('create', [ProductController::class, 'create'])->name('products.create');
-    Route::post('/', [ProductController::class, 'store'])->name('products.store');
-    Route::get('{product}', [ProductController::class, 'show'])->name('products.show');
-    Route::get('{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
-    Route::put('{product}', [ProductController::class, 'update'])->name('products.update');
-    Route::delete('{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+Route::get('/', function () {
+    return redirect()->route('register');
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::resource('products', ProductController::class);
+
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+});
+
+Auth::routes();

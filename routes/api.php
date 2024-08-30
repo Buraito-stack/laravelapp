@@ -2,6 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\ProductController;
+use App\Http\Controllers\api\Auth\LoginController;
+use App\Http\Controllers\api\Auth\RegisterController;
+use App\Http\Controllers\api\Auth\LogOutController;
+
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/register', [RegisterController::class, 'register']);
+Route::post('/logout', [LogOutController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::prefix('products')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('products.index');
@@ -11,4 +18,8 @@ Route::prefix('products')->group(function () {
     Route::get('{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
     Route::put('{product}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+});
+
+Route::middleware('auth-sanctum')->get('/user',function(Request $request){
+    return $request->user();
 });

@@ -13,9 +13,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $product = Product::all();
-
-        return response()->json(['products' => $product]);
+        $products = Product::all();
+        return response()->json(['products' => $products]);
     }
 
     /**
@@ -24,26 +23,23 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validate = $request->validate([
-            'name'  => ['required',  'string', 'max:100'],
+            'name'  => ['required', 'string', 'max:100'],
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],
         ], [
-                "name.required"  => "name is invalid",
-                "name.max"       => "name is limits",
-                "stock.required" => "stock is invalid",
-                "stock.integer"  => "stock wasn't number",
-                "stock.min"      => "stock must be more than 0",
-                "price.required" => "price is invalid",
-                "price.integer"  => "price wasn't number",
-                "price.min"      => "price must be more than 0",
-            ]
-        );
+            "name.required"  => "Name is invalid",
+            "name.max"       => "Name exceeds limit",
+            "stock.required" => "Stock is invalid",
+            "stock.integer"  => "Stock must be a number",
+            "stock.min"      => "Stock must be more than 0",
+            "price.required" => "Price is invalid",
+            "price.numeric"  => "Price must be a number",
+            "price.min"      => "Price must be more than 0",
+        ]);
 
-        $product = new Product($validate);
+        $product = Product::create($validate);
 
-        $product->save();
-
-        return response()->json(['product' => $product]);
+        return response()->json(['product' => $product], 201);
     }
 
     /**
@@ -52,7 +48,6 @@ class ProductController extends Controller
     public function show(string $id)
     {
         $product = Product::findOrFail($id);
-
         return response()->json(['product' => $product]);
     }
 
@@ -61,25 +56,22 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $validate = $request->validate(
-        [
-            'name'  => ['required',  'string', 'max:100'],
+        $validate = $request->validate([
+            'name'  => ['required', 'string', 'max:100'],
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],
-        ],[
-                "name.required"  => "name is invalid",
-                "name.max"       => "name is limits",
-                "stock.required" => "stock is invalid",
-                "stock.integer"  => "stock wasn't number",
-                "stock.min"      => "stock must be more than 0",
-                "price.required" => "price is invalid",
-                "price.integer"  => "price wasn't number",
-                "price.min"      => "price must be more than 0",
-            ]
-        );
+        ], [
+            "name.required"  => "Name is invalid",
+            "name.max"       => "Name exceeds limit",
+            "stock.required" => "Stock is invalid",
+            "stock.integer"  => "Stock must be a number",
+            "stock.min"      => "Stock must be more than 0",
+            "price.required" => "Price is invalid",
+            "price.numeric"  => "Price must be a number",
+            "price.min"      => "Price must be more than 0",
+        ]);
 
         $product = Product::findOrFail($id);
-
         $product->update($validate);
 
         return response()->json(['product' => $product]);
@@ -91,9 +83,8 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         $product = Product::findOrFail($id);
-
         $product->delete();
 
-        return response()->json(['product' => $product]);
+        return response()->json(['message' => 'Product deleted successfully.']);
     }
 }

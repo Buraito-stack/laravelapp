@@ -13,9 +13,16 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $product = Product::all();
+        $products = Product::all();
+        return view('products.index', compact('products'));
+    }
 
-        return response()->json(['products' => $product]);
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('products.create');
     }
 
     /**
@@ -23,80 +30,75 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validate = $request->validate(
-        [
-            'name'  => ['required',  'string', 'max:100'],
+        $validate = $request->validate([
+            'name'  => ['required', 'string', 'max:100'],
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],
-        ], 
-            [
-                "name.required"  => "name is invalid",
-                "name.max"       => "name is limits",
-                "stock.required" => "stock is invalid",
-                "stock.integer"  => "stock wasn't number",
-                "stock.min"      => "stock must be more than 0",
-                "price.required" => "price is invalid",
-                "price.integer"  => "price wasn't number",
-                "price.min"      => "price must be more than 0",
-            ]
-        );
+        ], [
+            "name.required"  => "Name is invalid",
+            "name.max"       => "Name exceeds limit",
+            "stock.required" => "Stock is invalid",
+            "stock.integer"  => "Stock must be a number",
+            "stock.min"      => "Stock must be more than 0",
+            "price.required" => "Price is invalid",
+            "price.integer"  => "Price must be a number",
+            "price.min"      => "Price must be more than 0",
+        ]);
 
         $product = new Product($validate);
-
         $product->save();
 
-        return response()->json(['product' => $product]);
+        return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Product $product)
     {
-        $product = Product::findOrFail($id);
+        return view('products.show', compact('product'));
+    }
 
-        return response()->json(['product' => $product]);
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Product $product)
+    {
+        return view('products.edit', compact('product'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Product $product)
     {
-        $validate = $request->validate(
-        [
-            'name'  => ['required',  'string', 'max:100'],
+        $validate = $request->validate([
+            'name'  => ['required', 'string', 'max:100'],
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],
-        ], 
-            [
-                "name.required"  => "name is invalid",
-                "name.max"       => "name is limits",
-                "stock.required" => "stock is invalid",
-                "stock.integer"  => "stock wasn't number",
-                "stock.min"      => "stock must be more than 0",
-                "price.required" => "price is invalid",
-                "price.integer"  => "price wasn't number",
-                "price.min"      => "price must be more than 0",
-            ]
-        );
-
-        $product = Product::findOrFail($id);
+        ], [
+            "name.required"  => "Name is invalid",
+            "name.max"       => "Name exceeds limit",
+            "stock.required" => "Stock is invalid",
+            "stock.integer"  => "Stock must be a number",
+            "stock.min"      => "Stock must be more than 0",
+            "price.required" => "Price is invalid",
+            "price.integer"  => "Price must be a number",
+            "price.min"      => "Price must be more than 0",
+        ]);
 
         $product->update($validate);
 
-        return response()->json(['product' => $product]);
+        return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        $product = Product::findOrFail($id);
-
         $product->delete();
 
-        return response()->json(['product' => $product]);
+        return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
     }
 }
