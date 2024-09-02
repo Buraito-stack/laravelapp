@@ -1,25 +1,22 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\api\ProductController;
-use App\Http\Controllers\api\Auth\LoginController;
-use App\Http\Controllers\api\Auth\RegisterController;
-use App\Http\Controllers\api\Auth\LogOutController;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\Auth\LogOutController;
+use App\Http\Controllers\Api\Auth\LoginController;
 
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/register', [RegisterController::class, 'register']);
-Route::post('/logout', [LogOutController::class, 'logout'])->middleware('auth:sanctum');
+Route::delete('/logout', [LogOutController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::prefix('products')->group(function () {
-    Route::get('/', [ProductController::class, 'index'])->name('products.index');
-    Route::get('create', [ProductController::class, 'create'])->name('products.create');
-    Route::post('/', [ProductController::class, 'store'])->name('products.store');
-    Route::get('{product}', [ProductController::class, 'show'])->name('products.show');
-    Route::get('{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
-    Route::put('{product}', [ProductController::class, 'update'])->name('products.update');
-    Route::delete('{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+Route::middleware(['auth:sanctum', 'verified'])->get('/user', function (Request $request) {
+    return $request->user();
 });
 
-Route::middleware('auth-sanctum')->get('/user',function(Request $request){
-    return $request->user();
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('product', ProductController::class);
 });

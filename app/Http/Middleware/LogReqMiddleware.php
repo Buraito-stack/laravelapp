@@ -3,12 +3,11 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class LogRequestMiddleware
+class LogReqMiddleware
 {
     /**
      * Handle an incoming request.
@@ -17,7 +16,11 @@ class LogRequestMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        Log::info('Request received: ' . $request->method() . ' ' . $request->getRequestUri());
+        Log::info('Request URL: ' . $request->fullUrl());
+        Log::info('Request Method: ' . $request->method());
+        Log::info('Request Headers: ' . json_encode($request->headers->all()));
+        Log::info('Request Body: ' . json_encode($request->all()));
+
         return $next($request);
     }
 }
