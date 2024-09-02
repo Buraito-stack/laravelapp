@@ -38,5 +38,8 @@
         @endforeach
         </tbody>
     </table>
+    
+    {{ $products->links() }}
+
     <a href="{{ route('products.create') }}" class="btn btn-success">Tambah Produk Baru</a>
 @endsection
