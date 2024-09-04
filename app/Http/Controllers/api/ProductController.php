@@ -22,22 +22,25 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validate = $request->validate([
-            'name'  => ['required', 'string', 'max:100'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'stock' => ['required', 'integer', 'min:0'],
-        ], [
-            "name.required"  => "Name is invalid",
-            "name.max"       => "Name exceeds limit",
-            "stock.required" => "Stock is invalid",
-            "stock.integer"  => "Stock must be a number",
-            "stock.min"      => "Stock must be more than 0",
-            "price.required" => "Price is invalid",
-            "price.numeric"  => "Price must be a number",
-            "price.min"      => "Price must be more than 0",
-        ]);
+        $validated = $request->validate(
+            [
+                'name'  => ['required', 'string', 'max:100'],
+                'price' => ['required', 'numeric', 'min:0'],
+                'stock' => ['required', 'integer', 'min:0'],
+            ], 
+            [
+                'name.required'  => 'Name is invalid',
+                'name.max'       => 'Name exceeds limit',
+                'stock.required' => 'Stock is invalid',
+                'stock.integer'  => 'Stock must be a number',
+                'stock.min'      => 'Stock must be more than 0',
+                'price.required' => 'Price is invalid',
+                'price.numeric'  => 'Price must be a number',
+                'price.min'      => 'Price must be more than 0',
+            ]
+        );
 
-        $product = Product::create($validate);
+        $product = Product::create($validated);
 
         return response()->json(['product' => $product], 201);
     }
@@ -45,34 +48,35 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Product $product)
     {
-        $product = Product::findOrFail($id);
         return response()->json(['product' => $product]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Product $product)
     {
-        $validate = $request->validate([
-            'name'  => ['required', 'string', 'max:100'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'stock' => ['required', 'integer', 'min:0'],
-        ], [
-            "name.required"  => "Name is invalid",
-            "name.max"       => "Name exceeds limit",
-            "stock.required" => "Stock is invalid",
-            "stock.integer"  => "Stock must be a number",
-            "stock.min"      => "Stock must be more than 0",
-            "price.required" => "Price is invalid",
-            "price.numeric"  => "Price must be a number",
-            "price.min"      => "Price must be more than 0",
-        ]);
+        $validated = $request->validate(
+            [
+                'name'  => ['required', 'string', 'max:100'],
+                'price' => ['required', 'numeric', 'min:0'],
+                'stock' => ['required', 'integer', 'min:0'],
+            ], 
+            [
+                'name.required'  => 'Name is invalid',
+                'name.max'       => 'Name exceeds limit',
+                'stock.required' => 'Stock is invalid',
+                'stock.integer'  => 'Stock must be a number',
+                'stock.min'      => 'Stock must be more than 0',
+                'price.required' => 'Price is invalid',
+                'price.numeric'  => 'Price must be a number',
+                'price.min'      => 'Price must be more than 0',
+            ]
+        );
 
-        $product = Product::findOrFail($id);
-        $product->update($validate);
+        $product->update($validated);
 
         return response()->json(['product' => $product]);
     }
@@ -80,9 +84,8 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        $product = Product::findOrFail($id);
         $product->delete();
 
         return response()->json(['message' => 'Product deleted successfully.']);

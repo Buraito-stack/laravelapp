@@ -9,4 +9,4 @@
     </div>
     <br>
     <a href="/" class="btn btn-primary">Kembali ke Daftar Produk</a>
-@endsection
+@endsections

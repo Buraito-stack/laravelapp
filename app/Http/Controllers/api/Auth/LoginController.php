@@ -22,7 +22,7 @@ class LoginController extends Controller
                 'data' => [
                     'errors' => $validator->errors(),
                 ],
-            ]);
+            ], 422);
         }
 
         $user = User::where('email', $request->string('email'))->first();
@@ -32,7 +32,7 @@ class LoginController extends Controller
                 'data' => [
                     'errors' => 'Invalid email or password',
                 ],
-            ]);
+            ], 401);
         }
 
         return response()->json([
@@ -41,6 +41,6 @@ class LoginController extends Controller
                 'token' => $user->createToken('API Token')->plainTextToken,
             ],
             'message' => 'Login successful',
-        ]);
+        ], 200);
     }
 }

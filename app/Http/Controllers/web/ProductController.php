@@ -30,25 +30,29 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validate = $request->validate([
-            'name'  => ['required', 'string', 'max:100'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'stock' => ['required', 'integer', 'min:0'],
-        ], [
-            "name.required"  => "Name is invalid",
-            "name.max"       => "Name exceeds limit",
-            "stock.required" => "Stock is invalid",
-            "stock.integer"  => "Stock must be a number",
-            "stock.min"      => "Stock must be more than 0",
-            "price.required" => "Price is invalid",
-            "price.integer"  => "Price must be a number",
-            "price.min"      => "Price must be more than 0",
-        ]);
+        $validated = $request->validate(
+            [
+                'name'  => ['required', 'string', 'max:100'],
+                'price' => ['required', 'numeric', 'min:0'],
+                'stock' => ['required', 'integer', 'min:0'],
+            ], 
+            [
+                'name.required'  => 'Name is invalid',
+                'name.max'       => 'Name exceeds limit',
+                'stock.required' => 'Stock is invalid',
+                'stock.integer'  => 'Stock must be a number',
+                'stock.min'      => 'Stock must be more than 0',
+                'price.required' => 'Price is invalid',
+                'price.numeric'  => 'Price must be a number',
+                'price.min'      => 'Price must be more than 0',
+            ]
+        );
 
-        $product = new Product($validate);
-        $product->save();
+        $product = Product::create($validated);
 
-        return redirect()->route('products.index')->with('success', 'Product created successfully.');
+        return redirect()
+            ->route('products.index')
+            ->with('success', 'Product created successfully.');
     }
 
     /**
@@ -72,24 +76,29 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $validate = $request->validate([
-            'name'  => ['required', 'string', 'max:100'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'stock' => ['required', 'integer', 'min:0'],
-        ], [
-            "name.required"  => "Name is invalid",
-            "name.max"       => "Name exceeds limit",
-            "stock.required" => "Stock is invalid",
-            "stock.integer"  => "Stock must be a number",
-            "stock.min"      => "Stock must be more than 0",
-            "price.required" => "Price is invalid",
-            "price.integer"  => "Price must be a number",
-            "price.min"      => "Price must be more than 0",
-        ]);
+        $validated = $request->validate(
+            [
+                'name'  => ['required', 'string', 'max:100'],
+                'price' => ['required', 'numeric', 'min:0'],
+                'stock' => ['required', 'integer', 'min:0'],
+            ], 
+            [
+                'name.required'  => 'Name is invalid',
+                'name.max'       => 'Name exceeds limit',
+                'stock.required' => 'Stock is invalid',
+                'stock.integer'  => 'Stock must be a number',
+                'stock.min'      => 'Stock must be more than 0',
+                'price.required' => 'Price is invalid',
+                'price.numeric'  => 'Price must be a number',
+                'price.min'      => 'Price must be more than 0',
+            ]
+        );
 
-        $product->update($validate);
+        $product->update($validated);
 
-        return redirect()->route('products.index')->with('success', 'Product updated successfully.');
+        return redirect()
+            ->route('products.index')
+            ->with('success', 'Product updated successfully.');
     }
 
     /**
@@ -99,6 +108,8 @@ class ProductController extends Controller
     {
         $product->delete();
 
-        return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
+        return redirect()
+            ->route('products.index')
+            ->with('success', 'Product deleted successfully.');
     }
 }

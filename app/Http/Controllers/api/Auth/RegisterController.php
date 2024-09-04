@@ -13,7 +13,7 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name'     => 'required|string|max:255',
+            'name'     => 'required|string|max:100',
             'email'    => 'required|email|unique:users',
             'password' => 'required|min:8|confirmed',
         ]);
@@ -23,7 +23,7 @@ class RegisterController extends Controller
                 'data' => [
                     'errors' => $validator->errors(),
                 ],
-            ]);
+            ], 422);
         }
 
         $user = User::create([
@@ -38,6 +38,6 @@ class RegisterController extends Controller
                 'token' => $user->createToken('API Token')->plainTextToken,
             ],
             'message' => 'Registration successful',
-        ]);
+        ], 201);
     }
 }
