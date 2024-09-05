@@ -14,7 +14,9 @@
     <form class="mb-4" action="{{ route('products.index') }}" method="GET">
         <div class="input-group">
             <input type="text" class="form-control" name="keyword" placeholder="Cari produk" value="{{ request('keyword') }}">
-            <button class="btn btn-outline-secondary" type="submit">Cari</button>
+            <button class="btn btn-outline-secondary" type="submit">
+                <i class="fas fa-search"></i> <!-- Font Awesome Icon -->
+            </button>
         </div>
     </form>
     <!-- End Search Form -->
