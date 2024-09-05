@@ -11,12 +11,19 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::paginate(10);
+        $keyword = $request->input('keyword');
+
+        $products = Product::query()  
+            ->when($request->filled('keyword'), 
+                fn($query) => $query->where('name', 'like', "%{$keyword}%")
+            )
+            ->paginate(10);
+    
         return view('products.index', compact('products'));
     }
-
+    
     /**
      * Show the form for creating a new resource.
      */

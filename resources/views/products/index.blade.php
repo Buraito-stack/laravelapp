@@ -10,6 +10,15 @@
         </div>
     @endif
 
+    <!-- Search Form -->
+    <form class="mb-4" action="{{ route('products.index') }}" method="GET">
+        <div class="input-group">
+            <input type="text" class="form-control" name="keyword" placeholder="Cari produk" value="{{ request('keyword') }}">
+            <button class="btn btn-outline-secondary" type="submit">Cari</button>
+        </div>
+    </form>
+    <!-- End Search Form -->
+     
     <table class="table">
         <thead>
         <tr>
@@ -42,4 +51,5 @@
     {{ $products->links() }}
 
     <a href="{{ route('products.create') }}" class="btn btn-success">Tambah Produk Baru</a>
+
 @endsection
